@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ラーメンランキング - あなたのラーメン旅を記録しよう</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+    <!-- GSAP Animation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Noto Sans JP', 'Inter', sans-serif;
+            background-color: #F9FAFB; /* Lighter gray */
+            color: #111827; /* Darker gray */
+            overscroll-behavior: none;
+        }
+        .bg-primary { background-color: #F97316; }
+        .text-primary { color: #F97316; }
+        .bg-primary-gradient {
+            background-image: linear-gradient(to right, #F97316, #FB923C);
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* --- Hero Section Background --- */
+        .hero-background::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(circle at 50% 30%, rgba(249, 115, 22, 0.1), transparent 50%);
+            opacity: 0;
+            transform: scale(0.8);
+            z-index: -1;
+        }
+
+        /* --- Horizontal Scroll Section --- */
+        #horizontal-scroll-section {
+            background-color: #111827; /* Dark Gray */
+            color: #F9FAFB;
+            overflow: hidden;
+        }
+        .horizontal-track {
+            display: flex;
+            align-items: center;
+            padding: 0 calc(50vw - 150px); 
+            width: max-content;
+        }
+        .track-item {
+            flex-shrink: 0;
+            padding: 0 4vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .phone-slide {
+            width: 200px;
+            aspect-ratio: 320 / 650;
+            position: relative;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        }
+        .text-block {
+            width: 300px;
+        }
+        .phone-mockup {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1c1c1c;
+            border-radius: 30px;
+            border: 8px solid #1c1c1c;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            border-radius: 22px;
+            overflow: hidden;
+        }
+        .phone-screen img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background-color: #F9FAFB;
+        }
+        
+        /* Initial state for animations */
+        .gsap-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header -->
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                </svg>
+                <h1 class="text-2xl font-bold text-primary">ラーメンランキング</h1>
+            </a>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#details" class="text-gray-600 hover:text-primary transition">機能</a>
+                <a href="#gallery" class="text-gray-600 hover:text-primary transition">デザイン</a>
+                <a href="#download" class="text-gray-600 hover:text-primary transition">ダウンロード</a>
+            </nav>
+            <a href="#download" class="hidden md:block bg-primary-gradient text-white px-5 py-2 rounded-full font-bold hover:opacity-90 transition shadow-md">
+                アプリを入手
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="py-24 md:py-40 relative hero-background overflow-hidden">
+            <div class="container mx-auto px-6 text-center">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-5xl md:text-7xl font-extrabold tracking-tight gsap-reveal">あなたのラーメン旅を<br class="md:hidden">記録しよう。</h2>
+                    <p class="mt-8 text-lg md:text-xl text-gray-600 max-w-2xl mx-auto gsap-reveal">
+                        食べた杯、新しい味との出会い、そして麺の冒険を可視化。ラーメンランキングは、すべてのラーメン好きのための究極の相棒です。
+                    </p>
+                    <div class="mt-10 gsap-reveal">
+                        <a href="#download" class="bg-primary-gradient text-white px-10 py-4 rounded-full text-lg font-bold hover:opacity-90 transition-transform transform hover:scale-105 shadow-xl inline-block">
+                            無料でダウンロード
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Horizontal Scroll Section -->
+        <section id="horizontal-scroll-section" class="h-[300vh] relative">
+            <div class="sticky top-0 h-screen w-full flex flex-col justify-center">
+                <div class="w-full max-w-4xl mx-auto text-center px-6 mb-16">
+                    <h2 class="text-4xl md:text-5xl font-bold gsap-reveal">すべての記録を、一つの場所に。</h2>
+                    <p class="text-gray-400 mt-4 text-lg gsap-reveal">簡単なメモから詳細な分析まで、必要なものがすべてここにあります。</p>
+                </div>
+                <div class="horizontal-track">
+                    <div class="track-item">
+                        <div class="text-block">
+                            <h3 class="text-2xl font-semibold">道を見つけよう。</h3>
+                            <p class="text-gray-400 mt-2">訪れたすべてのラーメン店をインタラクティブな地図で確認。種類で絞り込み、次の一杯を見つけましょう。</p>
+                        </div>
+                    </div>
+                    <div class="track-item">
+                        <div class="phone-slide"><div class="phone-mockup"><div class="phone-screen"><img src="https://placehold.co/320x650/F9FAFB/111827?text=マップ表示" alt="マップ画面"></div></div></div>
+                    </div>
+                    <div class="track-item">
+                        <div class="phone-slide"><div class="phone-mockup"><div class="phone-screen"><img src="https://placehold.co/320x650/F9FAFB/111827?text=ダッシュボード" alt="ホーム画面"></div></div></div>
+                    </div>
+                    <div class="track-item">
+                        <div class="phone-slide"><div class="phone-mockup"><div class="phone-screen"><img src="https://placehold.co/320x650/F9FAFB/111827?text=統計データ" alt="統計画面"></div></div></div>
+                    </div>
+                    <div class="track-item">
+                        <div class="text-block">
+                            <h3 class="text-2xl font-semibold">すべてを記録。</h3>
+                            <p class="text-gray-400 mt-2">店名、ラーメンの種類、評価、価格を記録し、自分の写真やメモを追加できます。</p>
+                        </div>
+                    </div>
+                    <div class="track-item">
+                        <div class="phone-slide"><div class="phone-mockup"><div class="phone-screen"><img src="https://placehold.co/320x650/F9FAFB/111827?text=新規記録" alt="新規記録画面"></div></div></div>
+                    </div>
+                    <div class="track-item">
+                        <div class="phone-slide"><div class="phone-mockup"><div class="phone-screen"><img src="https://placehold.co/320x650/F9FAFB/111827?text=実績" alt="実績画面"></div></div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detailed Features Section -->
+        <section id="details" class="py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-20">
+                    <h2 class="text-4xl md:text-5xl font-bold gsap-reveal">強力な機能。<br>シンプルな操作性。</h2>
+                    <p class="text-gray-600 mt-4 max-w-2xl mx-auto gsap-reveal">すべての機能は、あなたのラーメン記録体験を向上させるために設計されています。</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16 md:gap-y-24 items-center">
+                    <div class="gsap-feature">
+                        <div class="flex items-center gap-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l6-3m-6 3V7m0 10l-6-3m6 3l6 3" /></svg>
+                            <h3 class="text-2xl font-bold">インタラクティブマップ</h3>
+                        </div>
+                        <p class="mt-2 text-gray-600">あなたのラーメン履歴を可視化。GPS連携により、どこに行ったかを確認し、現在地近くの店を簡単に見つけられます。</p>
+                    </div>
+                    <div class="gsap-feature">
+                        <img src="https://placehold.co/600x400/F9FAFB/cccccc?text=インタラクティブマップUI" alt="インタラクティブマップのUI" class="rounded-3xl shadow-lg w-full">
+                    </div>
+
+                    <div class="gsap-feature md:order-last">
+                         <div class="flex items-center gap-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                            <h3 class="text-2xl font-bold">洞察に満ちた統計</h3>
+                        </div>
+                        <p class="mt-2 text-gray-600">総訪問数、平均評価、支出額を追跡。ラーメンの種類ごとに分類された美しいグラフで、あなたの傾向を分析します。</p>
+                    </div>
+                    <div class="gsap-feature md:order-first">
+                        <img src="https://placehold.co/600x400/F9FAFB/cccccc?text=統計とグラフ" alt="統計グラフ" class="rounded-3xl shadow-lg w-full">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section id="gallery" class="py-24 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-bold gsap-reveal">Flutterで構築された、洗練されたデザイン。</h2>
+                    <p class="text-gray-600 mt-4 max-w-2xl mx-auto gsap-reveal">マテリアルデザインで構築され、どのデバイスでもレスポンシブでモダンな体験を提供します。</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                    <div class="gsap-gallery-item">
+                        <img src="https://placehold.co/300x600/F9FAFB/F97316?text=ホーム画面" alt="ホームダッシュボードのスクリーンショット" class="rounded-3xl shadow-lg w-full h-full object-cover">
+                    </div>
+                    <div class="gsap-gallery-item">
+                        <img src="https://placehold.co/300x600/F9FAFB/F97316?text=記録画面" alt="記録入力画面のスクリーンショット" class="rounded-3xl shadow-lg w-full h-full object-cover">
+                    </div>
+                    <div class="gsap-gallery-item">
+                        <img src="https://placehold.co/300x600/F9FAFB/F97316?text=実績画面" alt="実績画面のスクリーンショット" class="rounded-3xl shadow-lg w-full h-full object-cover">
+                    </div>
+                    <div class="gsap-gallery-item">
+                        <img src="https://placehold.co/300x600/F9FAFB/F97316?text=設定画面" alt="設定画面のスクリーンショット" class="rounded-3xl shadow-lg w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Download Section -->
+        <section id="download" class="py-24 bg-white">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl md:text-5xl font-bold gsap-reveal">今日からあなたのラー活を始めよう。</h2>
+                <p class="text-gray-600 mt-6 max-w-2xl mx-auto gsap-reveal">ラーメンランキングは無料でダウンロードできます。味わい、記録し、発見する旅を始めましょう。</p>
+                <div class="mt-10 flex flex-col sm:flex-row justify-center items-center gap-6 gsap-reveal">
+                    <a href="#" target="_blank" class="inline-block h-14">
+                        <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="App Storeからダウンロード" class="h-full w-auto">
+                    </a>
+                    <a href="#" target="_blank" class="inline-block h-14">
+                        <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Google Playで手に入れよう" class="h-full w-auto object-contain">
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300">
+        <div class="container mx-auto px-6 py-10">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 text-center sm:text-left">
+                <div>
+                    <h3 class="font-bold text-lg text-white">ラーメンランキング</h3>
+                    <p class="mt-2 text-gray-400 text-sm">あなたのラーメン旅を記録しよう。</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg text-white">ナビゲーション</h3>
+                    <ul class="mt-2 space-y-2 text-sm">
+                        <li><a href="#details" class="text-gray-400 hover:text-white">機能</a></li>
+                        <li><a href="#gallery" class="text-gray-400 hover:text-white">デザイン</a></li>
+                        <li><a href="#download" class="text-gray-400 hover:text-white">ダウンロード</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg text-white">リーガル</h3>
+                    <ul class="mt-2 space-y-2 text-sm">
+                        <li><a href="privacy.html" class="text-gray-400 hover:text-white">プライバシーポリシー</a></li>
+                        <li><a href="terms.html" class="text-gray-400 hover:text-white">利用規約</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-10 border-t border-gray-700 pt-6 text-center text-sm text-gray-500">
+                <p>&copy; <span id="year"></span> ラーメンランキング. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // --- General Reveal Animation ---
+            gsap.utils.toArray('.gsap-reveal').forEach(el => {
+                gsap.fromTo(el, 
+                    { opacity: 0, y: 30 },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 1.2,
+                        ease: 'power4.out',
+                        scrollTrigger: {
+                            trigger: el,
+                            start: 'top 90%',
+                            toggleActions: 'play none none none',
+                        }
+                    }
+                );
+            });
+
+            // --- Hero Section Animations ---
+            gsap.fromTo('.hero-background::before', 
+                { opacity: 0, scale: 0.8 }, 
+                { opacity: 1, scale: 1, duration: 1.5, ease: 'power3.out' }
+            );
+            gsap.from('.gsap-reveal', { delay: 0.5, stagger: 0.2 });
+            
+            // --- Horizontal Scroll Animation ---
+            const track = document.querySelector('.horizontal-track');
+            const items = gsap.utils.toArray('.track-item');
+            
+            if (track) {
+                gsap.to(track, {
+                    x: () => -(track.scrollWidth - window.innerWidth),
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: "#horizontal-scroll-section",
+                        pin: true,
+                        scrub: 1,
+                        end: () => "+=" + (track.scrollWidth - window.innerWidth),
+                        onUpdate: (self) => {
+                            items.forEach(item => {
+                                const phone = item.querySelector('.phone-slide');
+                                if (!phone) return;
+                                
+                                const rect = item.getBoundingClientRect();
+                                const dist = Math.abs(rect.left + rect.width / 2 - window.innerWidth / 2);
+                                const scale = gsap.utils.mapRange(0, window.innerWidth / 2, 1.1, 0.85, dist);
+                                const opacity = gsap.utils.mapRange(window.innerWidth / 4, window.innerWidth / 2, 1, 0.5, dist);
+                                gsap.to(phone, { scale: scale, opacity: opacity, duration: 0.3, ease: 'power2.out' });
+                            });
+                        }
+                    }
+                });
+            }
+
+            // --- Detailed Features Animation ---
+            gsap.utils.toArray('.gsap-feature').forEach(el => {
+                gsap.fromTo(el,
+                    { opacity: 0, y: 60 },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 1.2,
+                        ease: 'power3.out',
+                        scrollTrigger: {
+                            trigger: el,
+                            start: 'top 85%',
+                            toggleActions: 'play none none none',
+                        }
+                    }
+                );
+            });
+
+            // --- Gallery Animation ---
+            gsap.utils.toArray('.gsap-gallery-item').forEach((item, i) => {
+                 gsap.fromTo(item,
+                    { opacity: 0, scale: 0.9, y: 50 },
+                    {
+                        opacity: 1,
+                        scale: 1,
+                        y: 0,
+                        duration: 1,
+                        ease: 'power3.out',
+                        delay: i * 0.1,
+                        scrollTrigger: {
+                            trigger: item.parentElement,
+                            start: 'top 80%',
+                            toggleActions: 'play none none none',
+                        }
+                    }
+                );
+            });
+
+            // Footer year
+            document.getElementById('year').textContent = new Date().getFullYear();
+        });
+    </script>
+
+</body>
+</html>
